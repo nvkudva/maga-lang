@@ -1,8 +1,8 @@
-# 🚀 Maga-Code Playground
+# 🚀 Maga-Lang Playground
 
-Maga-Code is a Kannada-inspired, lightweight programming language designed for playful learning and expression. Built for the Magas, by a Maga.
+Maga-Lang is a Kannada-inspired, lightweight programming language designed for playful learning and expression. Built for the Magas, by a Maga.
 
-![Maga-Code Preview](preview.png)
+![Maga-Lang Preview](preview.png)
 
 ## ✨ Features
 - **Kannada Keywords**: Familiar terms like `shuru`, `mugisu`, `helu`, and `maga`.
@@ -67,7 +67,7 @@ mugisu maga
 ## 🚀 Getting Started
 1. Clone this repository.
 2. Open `index.html` in any modern web browser or use a local server like `http-server`.
-3. Start writing some Maga-Code!
+3. Start writing some Maga-Lang!
 
 ## 🧪 Development
 To contribute or modify the interpreter, check out `maga-interpreter.js`. The logic is modular and easy to extend.
