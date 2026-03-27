@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mainTitle: 'MagaLang <span>ಪ್ಲೇಗ್ರೌಂಡ್</span>',
       mainDesc: 'ಅತ್ಯುತ್ತಮ ಕನ್ನಡ-ಪ್ರೇರಿತ ಪ್ರೋಗ್ರಾಮಿಂಗ್ ಭಾಷೆ. ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ, ಕನ್ನಡದಲ್ಲಿ ನೋಡಿ.',
       runBtn: 'ರನ್ ಮಗ 🚀',
-      clearBtn: 'ಔಟ್‌ಪುಟ್ ತೆರವುಗೊಳಿಸಿ',
+      clearBtn: 'ಕ್ಲಿಯರ್ ಮಾಡು',
       outputLabel: 'ಔಟ್‌ಪುಟ್',
       examplesHeading: 'ಈ ಉದಾಹರಣೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ:',
       footerText: 'ಮಗಗಳಿಗಾಗಿ, ಒಬ್ಬ ಮಗನಿಂದ ತಯಾರಿಸಲ್ಪಟ್ಟಿದೆ.',
