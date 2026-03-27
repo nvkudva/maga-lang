@@ -205,9 +205,9 @@ class MagaInterpreter {
       return pos;
     }
 
-    // WHILE LOOP: repeate madu maga <cond> { ... }
+    // WHILE LOOP: repeat madu maga <cond> { ... }
     if (
-      token === "repeate" &&
+      token === "repeat" &&
       tokens[pos + 1] === "madu" &&
       tokens[pos + 2] === "maga"
     ) {

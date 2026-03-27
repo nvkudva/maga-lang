@@ -29,7 +29,7 @@ mugisu maga
 | `maga` | If / Expression evaluation |
 | `adre` | Then |
 | `illandre maga` | Else / Else If |
-| `repeate madu maga` | Loop (While) |
+| `repeat madu maga` | Loop (While) |
 
 ### Examples
 #### Variables & Printing
@@ -57,7 +57,7 @@ mugisu maga
 ```maga
 shuru maga
     i = 1;
-    repeate madu maga i <= 5 {
+    repeat madu maga i <= 5 {
         helu maga "Count: " + i;
         i = i + 1;
     }
