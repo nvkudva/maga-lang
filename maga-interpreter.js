@@ -11,13 +11,35 @@ class MagaInterpreter {
   }
 
   /**
+   * Normalizes Kannada-script keywords back to English equivalents.
+   * @param {string} code
+   * @returns {string}
+   */
+  normalizeKannada(code) {
+    if (typeof KannadaTranslit === 'undefined') return code;
+    // Split on quoted strings so we only replace keywords OUTSIDE of string literals
+    const parts = code.split(/(\"[\s\S]*?\")/);
+    const normalized = parts.map((part, i) => {
+      // Even indices = outside quotes; odd indices = inside quotes (keep verbatim)
+      if (i % 2 !== 0) return part;
+      let result = part;
+      for (const [kannadaKw, englishKw] of Object.entries(KannadaTranslit.KANNADA_KEYWORDS)) {
+        result = result.split(kannadaKw).join(englishKw);
+      }
+      return result;
+    });
+    return normalized.join('');
+  }
+
+  /**
    * Tokenizes the source code into an array of strings.
+   * Supports both ASCII and Kannada Unicode (U+0C00-U+0C7F) identifiers.
    * @param {string} code - The Maga-Code source string.
    * @returns {string[]} An array of tokens.
    */
   tokenize(code) {
     const tokens = [];
-    const regex = /(".*?"|\d+|[a-zA-Z_]\w*|==|!=|<=|>=|=|[{}();+\-*/<>!|&%])/g;
+    const regex = /("[\s\S]*?"|\d+|[\u0C00-\u0C7Fa-zA-Z_][\u0C00-\u0C7Fa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
     let match;
     while ((match = regex.exec(code)) !== null) {
       tokens.push(match[0]);
@@ -51,11 +73,13 @@ class MagaInterpreter {
   interpret(code) {
     this.variables = {};
     this.output = [];
-    const tokens = this.tokenize(code);
+    // Normalize Kannada-script keywords so the parser handles both modes
+    const normalizedCode = this.normalizeKannada(code);
+    const tokens = this.tokenize(normalizedCode);
     let pos = 0;
 
     if (tokens[pos] !== "shuru" || tokens[pos + 1] !== "maga") {
-      throw new Error("Program must start with 'shuru maga'");
+      throw new Error("Program must start with 'shuru maga' (or ಶುರು ಮಗ in Kannada mode)");
     }
     pos += 2;
 
