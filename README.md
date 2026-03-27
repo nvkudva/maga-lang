@@ -44,8 +44,8 @@ mugisu maga
 #### Conditionals
 ```maga
 shuru maga
-    vayassu = 18;
-    maga vayassu >= 18 adre {
+    vayasu = 18;
+    maga vayasu >= 18 adre {
         helu maga "Vote hakabahudu maga!";
     } illandre maga {
         helu maga "Kaayi maga!";
