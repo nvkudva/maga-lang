@@ -14,8 +14,8 @@
     <div class="glass-bg"></div>
     <div class="container">
         <header>
-            <h1>MagaLang <span>Playground</span></h1>
-            <p>The ultimate Kannada-inspired programming language. Type in English, see in Kannada.</p>
+            <h1 id="mainTitle">MagaLang <span>Playground</span></h1>
+            <p id="mainDesc">The ultimate Kannada-inspired programming language. Type in English, see in Kannada.</p>
             <a id="viewSourceLink" class="github-link" href="https://github.com/nvkudva/magalang" target="_blank" rel="noopener noreferrer">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
@@ -43,45 +43,80 @@
                     <div id="editor" class="code-editor" contenteditable="true" spellcheck="false" data-placeholder="Write your MagaLang here..."></div>
                 </div>
                 <div class="output-container" id="outputContainer">
-                    <div class="output-label">Output</div>
+                    <div class="output-label" id="outputLabel">Output</div>
                     <div id="output" class="output-area">Welcome to MagaLang! Click "Run Maga" to execute.</div>
                 </div>
             </div>
         </div>
 
         <section class="examples">
-            <h3>Try these examples:</h3>
+            <h3 id="examplesHeading">Try these examples:</h3>
             <div class="example-grid">
-                <div class="example-card" data-code='shuru maga
+                <div class="example-card" 
+                     data-title-en="Basic Math" data-title-kn="ಮೂಲ ಗಣಿತ"
+                     data-desc-en="Variables and printing." data-desc-kn="ವೇರಿಯಬಲ್‌ಗಳು ಮತ್ತು ಮುದ್ರಣ."
+                     data-code-en='shuru maga
     a = 10;
     b = 20;
     helu maga "Result is: " + (a + b);
-mugisu maga'>
-                    <h4>Basic Math</h4>
-                    <p>Variables and printing.</p>
+mugisu maga'
+                     data-code-kn='ಶುರು ಮಗ
+    a = 10;
+    b = 20;
+    ಹೇಳು ಮಗ "Result is: " + (a + b);
+ಮುಗಿಸು ಮಗ'>
+                    <h4 class="card-title">Basic Math</h4>
+                    <p class="card-desc">Variables and printing.</p>
                 </div>
-                <div class="example-card" data-code='shuru maga
+
+                <div class="example-card" 
+                     data-title-en="Voting Check" data-title-kn="ಮತದಾನದ ಪರಿಶೀಲನೆ"
+                     data-desc-en="If-Else condition." data-desc-kn="If-Else ಕಂಡೀಷನ್."
+                     data-code-en='shuru maga
     yassu = 18;
     maga yassu >= 18 adre {
         helu maga "Neenu vote hakabahudu maga!";
     } illandre maga {
         helu maga "Innu swalpa kaayi maga!";
     }
-mugisu maga'>
-                    <h4>Voting Check</h4>
-                    <p>If-Else condition.</p>
+mugisu maga'
+                     data-code-kn='ಶುರು ಮಗ
+    yassu = 18;
+    ಮಗ yassu >= 18 ಆದ್ರೆ {
+        ಹೇಳು ಮಗ "ನೀನು ವೋಟ್ ಹಾಕಬಹುದು ಮಗ!";
+    } ಇಲ್ಲಾಂದ್ರೆ ಮಗ {
+        ಹೇಳು ಮಗ "ಇನ್ನು ಸ್ವಲ್ಪ ಕಾಯಿ ಮಗ!";
+    }
+ಮುಗಿಸು ಮಗ'>
+                    <h4 class="card-title">Voting Check</h4>
+                    <p class="card-desc">If-Else condition.</p>
                 </div>
-                <div class="example-card" data-code='shuru maga
+
+                <div class="example-card" 
+                     data-title-en="Count Loop" data-title-kn="ಕೌಂಟ್ ಲೂಪ್"
+                     data-desc-en="Repeat loop execution." data-desc-kn="ರಿಪೀಟ್ ಲೂಪ್ ಎಕ್ಸ್ ಕ್ಯೂಶನ್."
+                     data-code-en='shuru maga
     i = 1;
     repeat madu maga i <= 5 {
         helu maga "Count: " + i;
         i = i + 1;
     }
-mugisu maga'>
-                    <h4>Count Loop</h4>
-                    <p>While loop execution.</p>
+mugisu maga'
+                     data-code-kn='ಶುರು ಮಗ
+    i = 1;
+    ರಿಪೀಟ್ ಮಾಡು ಮಗ i <= 5 {
+        ಹೇಳು ಮಗ "Count: " + i;
+        i = i + 1;
+    }
+ಮುಗಿಸು ಮಗ'>
+                    <h4 class="card-title">Count Loop</h4>
+                    <p class="card-desc">Repeat loop execution.</p>
                 </div>
-                <div class="example-card" data-code='shuru maga
+
+                <div class="example-card" 
+                     data-title-en="Even Or Odd" data-title-kn="ಸರಿ ಅಥವಾ ಬೆಸ"
+                     data-desc-en="Conditions inside loops." data-desc-kn="ಲೂಪ್‌ಗಳ ಒಳಗೆ ಕಂಡೀಷನ್ಸ್‌."
+                     data-code-en='shuru maga
     n = 1;
     repeat madu maga n <= 10 {
         maga (n % 2) == 0 adre {
@@ -91,22 +126,31 @@ mugisu maga'>
         }
         n = n + 1;
     }
-mugisu maga'>
-                    <h4>Even Or Odd</h4>
-                    <p>Conditions inside loops.</p>
+mugisu maga'
+                     data-code-kn='ಶುರು ಮಗ
+    n = 1;
+    ರಿಪೀಟ್ ಮಾಡು ಮಗ n <= 10 {
+        ಮಗ (n % 2) == 0 ಆದ್ರೆ {
+            ಹೇಳು ಮಗ n + " is Even";
+        } ಇಲ್ಲಾಂದ್ರೆ ಮಗ {
+            ಹೇಳು ಮಗ n + " is Odd";
+        }
+        n = n + 1;
+    }
+ಮುಗಿಸು ಮಗ'>
+                    <h4 class="card-title">Even Or Odd</h4>
+                    <p class="card-desc">Conditions inside loops.</p>
                 </div>
             </div>
         </section>
         
         <footer>
-            <p>Made for the Magas, by a Maga.</p>
+            <p id="footerText">Made for the Magas, by a Maga.</p>
         </footer>
     </div>
 
-    <!-- Suggestions UI will be injected here via app.js -->
-
-    <script src="kannada-transliteration.js?v=6"></script>
-    <script src="maga-interpreter.js?v=10"></script>
-    <script src="app.js?v=20"></script>
+    <script src="kannada-transliteration.js?v=7"></script>
+    <script src="maga-interpreter.js?v=11"></script>
+    <script src="app.js?v=21"></script>
 </body>
 </html>

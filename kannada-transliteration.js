@@ -320,7 +320,13 @@ const KannadaTranslit = (() => {
           word += line[i];
           i++;
         }
-        result += transliterateWord(word);
+        
+        // Check if it's a known keyword and map to its exact Kannada representation
+        if (ENGLISH_TO_KANNADA_KEYWORDS[word]) {
+            result += ENGLISH_TO_KANNADA_KEYWORDS[word];
+        } else {
+            result += transliterateWord(word);
+        }
       } else {
         // Number, operator, whitespace, punctuation — pass through
         result += line[i];
@@ -364,10 +370,20 @@ const KannadaTranslit = (() => {
     ಮಾಡು: "madu",
   };
 
+  // Reverse mapping for accurate transliteration of English keywords to Kannada
+  const ENGLISH_TO_KANNADA_KEYWORDS = {};
+  for (const [kn, en] of Object.entries(KANNADA_KEYWORDS)) {
+    // Only map the first occurrence to avoid overwrites if there were duplicates
+    if (!ENGLISH_TO_KANNADA_KEYWORDS[en]) {
+        ENGLISH_TO_KANNADA_KEYWORDS[en] = kn;
+    }
+  }
+
   return {
     transliterate,
     transliterateWord,
     transliterateLine,
     KANNADA_KEYWORDS,
+    ENGLISH_TO_KANNADA_KEYWORDS
   };
 })();

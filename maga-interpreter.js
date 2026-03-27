@@ -39,10 +39,11 @@ class MagaInterpreter {
    */
   tokenize(code) {
     const tokens = [];
-    // Enhanced regex to handle Kannada Unicode range and standard operators
-    const regex = /("[\s\S]*?"|\d+|[\u0C00-\u0C7Fa-zA-Z_][\u0C00-\u0C7Fa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
+    // Replace non-breaking spaces with standard space to ensure regex \s handles it cleanly
+    const cleanCode = code.replace(/\u00A0/g, ' ');
+    const regex = /("[\s\S]*?"|\d+|[\u0C80-\u0CFFa-zA-Z_][\u0C80-\u0CFFa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
     let match;
-    while ((match = regex.exec(code)) !== null) {
+    while ((match = regex.exec(cleanCode)) !== null) {
       tokens.push(match[0]);
     }
     return tokens;

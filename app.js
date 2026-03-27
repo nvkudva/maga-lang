@@ -1,6 +1,6 @@
 /**
  * MagaLang Playground — Core Application Logic
- * Supports real-time Kannada transliteration with Google Input Tools API.
+ * Supports dual-language UI and real-time Kannada transliteration.
  */
 document.addEventListener("DOMContentLoaded", () => {
   const editor = document.getElementById("editor");
@@ -12,16 +12,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const langKnBtn = document.getElementById("langKnBtn");
   const exampleCards = document.querySelectorAll(".example-card");
 
+  // UI Elements for translation
+  const mainTitle = document.getElementById("mainTitle");
+  const mainDesc = document.getElementById("mainDesc");
+  const outputLabel = document.getElementById("outputLabel");
+  const examplesHeading = document.getElementById("examplesHeading");
+  const footerText = document.getElementById("footerText");
+
   const interpreter = new MagaInterpreter();
-  let isKannadaMode = true; // Default to Kannada mode as requested
-  let initialCode = `shuru maga
-    // ಇಲ್ಲಿ ನಿಮ್ಮ MagaLang ಬರೆಯಿರಿ
-    i = 1;
-    repeat madu maga i <= 5 {
-        helu maga "Count: " + i;
-        i = i + 1;
+  let isKannadaMode = true; 
+
+  const UI_TRANSLATIONS = {
+    en: {
+      mainTitle: 'MagaLang <span>Playground</span>',
+      mainDesc: 'The ultimate Kannada-inspired programming language. Type in English, see in Kannada.',
+      runBtn: 'Run Maga 🚀',
+      clearBtn: 'Clear Output',
+      outputLabel: 'Output',
+      examplesHeading: 'Try these examples:',
+      footerText: 'Made for the Magas, by a Maga.',
+      welcomeMessage: 'Welcome to MagaLang! Click "Run Maga" to execute.',
+      placeholder: 'Write your MagaLang here...'
+    },
+    kn: {
+      mainTitle: 'MagaLang <span>ಪ್ಲೇಗ್ರೌಂಡ್</span>',
+      mainDesc: 'ಅತ್ಯುತ್ತಮ ಕನ್ನಡ-ಪ್ರೇರಿತ ಪ್ರೋಗ್ರಾಮಿಂಗ್ ಭಾಷೆ. ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ, ಕನ್ನಡದಲ್ಲಿ ನೋಡಿ.',
+      runBtn: 'ರನ್ ಮಗ 🚀',
+      clearBtn: 'ಔಟ್‌ಪುಟ್ ತೆರವುಗೊಳಿಸಿ',
+      outputLabel: 'ಔಟ್‌ಪುಟ್',
+      examplesHeading: 'ಈ ಉದಾಹರಣೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ:',
+      footerText: 'ಮಗಗಳಿಗಾಗಿ, ಒಬ್ಬ ಮಗನಿಂದ ತಯಾರಿಸಲ್ಪಟ್ಟಿದೆ.',
+      welcomeMessage: 'MagaLang ಗೆ ಸುಸ್ವಾಗತ! ಎಕ್ಸಿಕ್ಯೂಟ್ ಮಾಡಲು "ರನ್ ಮಗ" ಕ್ಲಿಕ್ ಮಾಡಿ.',
+      placeholder: 'ಇಲ್ಲಿ ನಿಮ್ಮ MagaLang ಬರೆಯಿರಿ...'
     }
-mugisu maga`;
+  };
 
   // --- Suggestions Dropdown State ---
   let suggestions = [];
@@ -30,7 +54,6 @@ mugisu maga`;
   let activeWord = "";
   let lastFetchTimestamp = 0;
 
-  // --- Initialize UI ---
   function createSuggestionBox() {
     if (suggestionBox) return suggestionBox;
     suggestionBox = document.createElement("div");
@@ -40,7 +63,7 @@ mugisu maga`;
     return suggestionBox;
   }
 
-  // --- Suggestions Logic ---
+  // --- Suggestions Logic (Google Input Tools) ---
   async function fetchSuggestions(text) {
     if (!text || text.trim().length === 0) return [];
     
@@ -48,20 +71,17 @@ mugisu maga`;
     lastFetchTimestamp = timestamp;
 
     try {
-      // Use Google Input Tools API
       const url = `https://inputtools.google.com/request?text=${encodeURIComponent(text)}&itc=kn-t-i0-und&num=8&cp=0&cs=1&ie=utf-8&oe=utf-8&app=magalang`;
       const response = await fetch(url);
       const data = await response.json();
       
-      // Check if this is still the most recent request
       if (timestamp !== lastFetchTimestamp) return null;
 
       if (data && data[0] === "SUCCESS") {
-        return data[1][0][1]; // The list of suggestions
+        return data[1][0][1];
       }
     } catch (e) {
       console.error("Transliteration fetch failed:", e);
-      // Fallback to local transliteration if API fails
       if (typeof KannadaTranslit !== "undefined") {
         return [KannadaTranslit.transliterateWord(text)];
       }
@@ -104,12 +124,10 @@ mugisu maga`;
       box.appendChild(item);
     });
 
-    // Position near the cursor
     box.style.left = `${rect.left}px`;
     box.style.top = `${rect.bottom + 5}px`;
     box.style.display = "block";
 
-    // Ensure it's on screen
     const boxRect = box.getBoundingClientRect();
     if (boxRect.right > window.innerWidth) {
       box.style.left = `${window.innerWidth - boxRect.width - 20}px`;
@@ -153,7 +171,6 @@ mugisu maga`;
     const text = range.startContainer.textContent || "";
     const offset = range.startOffset;
     
-    // Look backwards for word boundary
     let start = offset - 1;
     while (start >= 0 && /[a-zA-Z0-9']/.test(text[start])) {
       start--;
@@ -171,14 +188,10 @@ mugisu maga`;
     const node = range.startContainer;
     const offset = range.startOffset;
     
-    // Find exact start of the word
     let start = offset - oldWord.length;
-    
-    // Update text node content
     const originalText = node.textContent;
     node.textContent = originalText.substring(0, start) + newWord + originalText.substring(offset);
     
-    // Adjust cursor
     const newRange = document.createRange();
     newRange.setStart(node, start + newWord.length);
     newRange.collapse(true);
@@ -190,14 +203,13 @@ mugisu maga`;
 
   // --- Line Numbers ---
   function updateLineNumbers() {
-    // Get text including line breaks
-    const text = editor.innerText || editor.textContent;
+    const text = editor.innerText || "";
     const lines = text.split(/\r\n|\r|\n/).length;
     lineNumbers.innerHTML = "";
     for (let i = 1; i <= lines; i++) {
-      const span = document.createElement("span");
-      span.textContent = i;
-      lineNumbers.appendChild(span);
+        const span = document.createElement("span");
+        span.textContent = i;
+        lineNumbers.appendChild(span);
     }
   }
 
@@ -207,7 +219,6 @@ mugisu maga`;
     
     if (!isKannadaMode) return;
 
-    // Don't show if we just inserted a space or newline
     if (e.data === " " || e.data === "\n" || !e.data) {
       hideSuggestions();
       return;
@@ -225,14 +236,12 @@ mugisu maga`;
   });
 
   editor.addEventListener("keydown", (e) => {
-    // Tab handling
     if (e.key === "Tab") {
       e.preventDefault();
       document.execCommand("insertText", false, "    ");
       return;
     }
 
-    // Suggestions navigation
     if (suggestions.length > 0) {
       if (e.key === "ArrowDown") {
         e.preventDefault();
@@ -246,7 +255,6 @@ mugisu maga`;
         e.preventDefault();
         selectSuggestion(selectedIndex);
       } else if (e.key === " ") {
-        // Space selects the first suggestion if box is open
         e.preventDefault();
         selectSuggestion(selectedIndex);
         document.execCommand("insertText", false, " ");
@@ -256,21 +264,103 @@ mugisu maga`;
     }
   });
 
-  // Sync scroll
   editor.addEventListener("scroll", () => {
     lineNumbers.scrollTop = editor.scrollTop;
+  });
+
+  // --- Language Switcher ---
+  function setLanguage(lang) {
+    isKannadaMode = (lang === "kn");
+    const t = UI_TRANSLATIONS[lang];
+
+    // Update Toggle UI FIRST
+    if (isKannadaMode) {
+      langKnBtn.classList.add("active");
+      langEnBtn.classList.remove("active");
+      editor.classList.add("kannada-font");
+    } else {
+      langEnBtn.classList.add("active");
+      langKnBtn.classList.remove("active");
+      editor.classList.remove("kannada-font");
+      hideSuggestions();
+    }
+
+    // Update Global UI Text
+    mainTitle.innerHTML = t.mainTitle;
+    mainDesc.textContent = t.mainDesc;
+    runBtn.textContent = t.runBtn;
+    clearBtn.textContent = t.clearBtn;
+    outputLabel.textContent = t.outputLabel;
+    examplesHeading.textContent = t.examplesHeading;
+    footerText.textContent = t.footerText;
+    
+    if (output.textContent.includes("Welcome") || output.textContent.includes("MagaLang ಗೆ ಸುಸ್ವಾಗತ")) {
+        output.textContent = t.welcomeMessage;
+    }
+
+    editor.setAttribute("data-placeholder", t.placeholder);
+
+    // Update Example Cards UI ONLY (not active code yet)
+    exampleCards.forEach(card => {
+      const cardTitle = card.querySelector(".card-title");
+      const cardDesc = card.querySelector(".card-desc");
+      if (isKannadaMode) {
+        cardTitle.textContent = card.getAttribute("data-title-kn");
+        cardDesc.textContent = card.getAttribute("data-desc-kn");
+      } else {
+        cardTitle.textContent = card.getAttribute("data-title-en");
+        cardDesc.textContent = card.getAttribute("data-desc-en");
+      }
+    });
+
+    // --- TRANSFORM ACTIVE CODE ---
+    const currentCode = editor.innerText;
+    if (currentCode.trim().length > 0) {
+        if (isKannadaMode) {
+            // Check if it's already Kannada using a simple heuristic (presence of Unicode in Kannada range)
+            const hasKannada = /[\u0C80-\u0CFF]/.test(currentCode);
+            if (!hasKannada) {
+                // Roman -> Kannada
+                editor.innerText = KannadaTranslit.transliterate(currentCode);
+            }
+        } else {
+            // Kannada -> Roman (Keywords only)
+            let restored = currentCode;
+            for (const [kn, en] of Object.entries(KannadaTranslit.KANNADA_KEYWORDS)) {
+                restored = restored.split(kn).join(en);
+            }
+            editor.innerText = restored;
+        }
+    }
+
+    updateLineNumbers();
+  }
+
+  langEnBtn.addEventListener("click", () => setLanguage("en"));
+  langKnBtn.addEventListener("click", () => setLanguage("kn"));
+
+  // --- Example Cards Click ---
+  exampleCards.forEach(card => {
+    card.addEventListener("click", () => {
+      let code = isKannadaMode 
+        ? card.getAttribute("data-code-kn") 
+        : card.getAttribute("data-code-en");
+      
+      editor.innerText = code;
+      updateLineNumbers();
+      output.innerText = isKannadaMode ? "ಉದಾಹರಣೆ ಲೋಡ್ ಆಗಿದೆ. ರನ್ ಮಾಡಲು 'ರನ್ ಮಗ' ಕ್ಲಿಕ್ ಮಾಡಿ." : "Loaded example. Click Run to execute.";
+    });
   });
 
   // --- Control Buttons ---
   runBtn.addEventListener("click", () => {
     const code = editor.innerText;
-    output.innerText = "Running...\n";
+    output.innerText = isKannadaMode ? "ರನ್ ಮಾಡಲಾಗುತ್ತಿದೆ...\n" : "Running...\n";
     
-    // Small delay to show "Running..."
     setTimeout(() => {
       try {
         const result = interpreter.interpret(code);
-        output.innerText = result || "Program finished with no output.";
+        output.innerText = result || (isKannadaMode ? "ಪ್ರೋಗ್ರಾಂ ಯಶಸ್ವಿಯಾಗಿ ಮುಗಿದಿದೆ." : "Program finished with no output.");
       } catch (err) {
         output.innerText = "Error: " + err.message;
       }
@@ -281,47 +371,13 @@ mugisu maga`;
     output.innerText = "";
   });
 
-  // --- Language Toggle ---
-  function setLanguage(lang) {
-    if (lang === "kn") {
-      isKannadaMode = true;
-      langKnBtn.classList.add("active");
-      langEnBtn.classList.remove("active");
-      editor.classList.add("kannada-font");
-      editor.setAttribute("data-placeholder", "ಇಲ್ಲಿ ನಿಮ್ಮ MagaLang ಬರೆಯಿರಿ...");
-    } else {
-      isKannadaMode = false;
-      langEnBtn.classList.add("active");
-      langKnBtn.classList.remove("active");
-      editor.classList.remove("kannada-font");
-      editor.setAttribute("data-placeholder", "Write your MagaLang here...");
-      hideSuggestions();
-    }
-  }
-
-  langEnBtn.addEventListener("click", () => setLanguage("en"));
-  langKnBtn.addEventListener("click", () => setLanguage("kn"));
-
-  // --- Examples ---
-  exampleCards.forEach(card => {
-    card.addEventListener("click", () => {
-      let code = card.getAttribute("data-code");
-      
-      // If in Kannada mode, transliterate the example
-      if (isKannadaMode) {
-        if (typeof KannadaTranslit !== "undefined") {
-          code = KannadaTranslit.transliterate(code);
-        }
-      }
-      
-      editor.innerText = code;
-      updateLineNumbers();
-      output.innerText = "Loaded example. Click Run to execute.";
-    });
-  });
-
-  // Initial setup
-  editor.innerText = initialCode;
-  updateLineNumbers();
+  // --- INITIALIZATION ---
+  // 1. Set the raw English code of the first example
+  const firstCodeEn = exampleCards[0].getAttribute("data-code-en");
+  editor.innerText = firstCodeEn;
+  
+  // 2. Set language to Kannada (this will trigger transliteration of the editor automatically)
   setLanguage("kn");
+  
+  updateLineNumbers();
 });
