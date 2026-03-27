@@ -325,7 +325,8 @@ const KannadaTranslit = (() => {
         if (ENGLISH_TO_KANNADA_KEYWORDS[word]) {
             result += ENGLISH_TO_KANNADA_KEYWORDS[word];
         } else {
-            result += transliterateWord(word);
+            // Leave unknown words (like variables 'a', 'b', 'i') in English rather than transliterating to literal syllables
+            result += word;
         }
       } else {
         // Number, operator, whitespace, punctuation — pass through

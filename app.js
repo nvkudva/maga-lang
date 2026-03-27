@@ -372,12 +372,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- INITIALIZATION ---
-  // 1. Set the raw English code of the first example
-  const firstCodeEn = exampleCards[0].getAttribute("data-code-en");
-  editor.innerText = firstCodeEn;
-  
-  // 2. Set language to Kannada (this will trigger transliteration of the editor automatically)
+  // 1. Set language to Kannada FIRST
   setLanguage("kn");
+  
+  // 2. Load the exact Kannada code of the first example
+  const firstCodeKn = exampleCards[0].getAttribute("data-code-kn");
+  editor.innerText = firstCodeKn;
   
   updateLineNumbers();
 });
