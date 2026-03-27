@@ -324,12 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 editor.innerText = KannadaTranslit.transliterate(currentCode);
             }
         } else {
-            // Kannada -> Roman (Keywords only)
-            let restored = currentCode;
-            for (const [kn, en] of Object.entries(KannadaTranslit.KANNADA_KEYWORDS)) {
-                restored = restored.split(kn).join(en);
-            }
-            editor.innerText = restored;
+            // Kannada -> Roman (Keywords only, safe for strings)
+            editor.innerText = KannadaTranslit.restoreEnglishKeywords(currentCode);
         }
     }
 

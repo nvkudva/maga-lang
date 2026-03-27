@@ -17,8 +17,8 @@ class MagaInterpreter {
    */
   normalizeKannada(code) {
     if (typeof KannadaTranslit === 'undefined' || !KannadaTranslit.KANNADA_KEYWORDS) return code;
-    // Split on quoted strings so we only replace keywords OUTSIDE of string literals
-    const parts = code.split(/(\"[\s\S]*?\")/);
+    // Split on quoted strings (both double and single) so we only replace keywords OUTSIDE of string literals
+    const parts = code.split(/(["'][\s\S]*?["'])/);
     const normalized = parts.map((part, i) => {
       // Even indices = outside quotes; odd indices = inside quotes (keep verbatim)
       if (i % 2 !== 0) return part;
@@ -41,7 +41,7 @@ class MagaInterpreter {
     const tokens = [];
     // Replace non-breaking spaces with standard space to ensure regex \s handles it cleanly
     const cleanCode = code.replace(/\u00A0/g, ' ');
-    const regex = /("[\s\S]*?"|\d+|[\u0C80-\u0CFFa-zA-Z_][\u0C80-\u0CFFa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
+    const regex = /((?:\"[\s\S]*?\")|(?:'[\s\S]*?')|\d+|[\u0C80-\u0CFFa-zA-Z_][\u0C80-\u0CFFa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
     let match;
     while ((match = regex.exec(cleanCode)) !== null) {
       tokens.push(match[0]);

@@ -299,18 +299,17 @@ const KannadaTranslit = (() => {
     let result = "";
     let i = 0;
     while (i < line.length) {
-      if (line[i] === '"') {
-        // Start of a quoted string — transliterate its content
-        result += '"';
+      if (line[i] === '"' || line[i] === "'") {
+        const quoteChar = line[i];
+        // Start of a quoted string — DO NOT transliterate its content based on user feedback
+        result += quoteChar;
         i++;
-        let strContent = "";
-        while (i < line.length && line[i] !== '"') {
-          strContent += line[i];
+        while (i < line.length && line[i] !== quoteChar) {
+          result += line[i];
           i++;
         }
-        result += transliterateWord(strContent);
         if (i < line.length) {
-          result += '"';
+          result += quoteChar;
           i++;
         }
       } else if (/[a-zA-Z_]/.test(line[i])) {
@@ -380,10 +379,29 @@ const KannadaTranslit = (() => {
     }
   }
 
+  /**
+   * Safely restores Kannada keywords to English without touching string literals
+   */
+  function restoreEnglishKeywords(code) {
+    const parts = code.split(/(["'].*?["'])/);
+    const restored = parts.map((part, i) => {
+      // Keep quoted strings exactly as they are (odd indices are the string matches)
+      if (i % 2 !== 0) return part;
+      
+      let result = part;
+      for (const [kannadaKw, englishKw] of Object.entries(KANNADA_KEYWORDS)) {
+        result = result.split(kannadaKw).join(englishKw);
+      }
+      return result;
+    });
+    return restored.join('');
+  }
+
   return {
     transliterate,
     transliterateWord,
     transliterateLine,
+    restoreEnglishKeywords,
     KANNADA_KEYWORDS,
     ENGLISH_TO_KANNADA_KEYWORDS
   };
