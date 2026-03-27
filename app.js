@@ -278,10 +278,12 @@ document.addEventListener("DOMContentLoaded", () => {
       langKnBtn.classList.add("active");
       langEnBtn.classList.remove("active");
       editor.classList.add("kannada-font");
+      lineNumbers.classList.add("kannada-font");
     } else {
       langEnBtn.classList.add("active");
       langKnBtn.classList.remove("active");
       editor.classList.remove("kannada-font");
+      lineNumbers.classList.remove("kannada-font");
       hideSuggestions();
     }
 

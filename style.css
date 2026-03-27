@@ -184,11 +184,16 @@ header p {
     background: rgba(0, 0, 0, 0.2);
     color: #475569;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 1rem;
+    line-height: 1.6;
     text-align: right;
     padding-right: 0.75rem;
     user-select: none;
     border-right: 1px solid var(--border);
+}
+
+.line-numbers span {
+    display: block;
 }
 
 .code-editor {
@@ -201,9 +206,8 @@ header p {
     padding: 1rem;
     outline: none;
     line-height: 1.6;
-    overflow-y: auto;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    overflow: auto;
+    white-space: pre;
     user-select: text;
     caret-color: var(--primary);
 }
